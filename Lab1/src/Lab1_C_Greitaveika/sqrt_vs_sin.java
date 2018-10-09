@@ -16,16 +16,15 @@ public class sqrt_vs_sin {
     public static void main(String[] args) {
         int[] tiriamiKiekiai = {2_000, 4_000, 8_000, 16_000};
         Timekeeper tk = new Timekeeper(tiriamiKiekiai);
-        double bandymuKiekis = 10000;
         for (int kiekis : tiriamiKiekiai) {
             tk.start();
 
-            for (double i = 0; i < bandymuKiekis; i++) {
+            for (double i = 0; i < kiekis; i++) {
                 Math.sqrt(i);
             }
             tk.finish("Saknis");
 
-            for (double i = 0; i < bandymuKiekis; i++) {
+            for (double i = 0; i < kiekis; i++) {
                 Math.sin(i);
             }
 
