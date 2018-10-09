@@ -24,7 +24,7 @@ public class ToH extends ScreenKTU {
     private final int DISK_HEIGHT = 3;
     private final int ROD_HEIGHT = 23;
     private final int ROD_WIDTH = 57;
-    private final int DISK_COUNT = 7;
+    private final int DISK_COUNT = 4;
     private ArrayList<Rod> rods = new ArrayList<Rod>();
     private Disk selectedDisk = null;
     private long startTime;
@@ -37,7 +37,7 @@ public class ToH extends ScreenKTU {
     public void start() {
         clearAll(Color.black);
         moveCount = 0;
-        long startTime = System.currentTimeMillis();
+
 
         setColors(Color.white, Color.green);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
@@ -100,9 +100,6 @@ public class ToH extends ScreenKTU {
     @Override
     public void mouseReleased(MouseEvent e) {
 
-        long start = startTime;
-        long timeElapsed = System.currentTimeMillis() - start;
-        System.out.println(timeElapsed);
         int mouseX = e.getX();
         int mouseY = e.getY();
 
@@ -150,9 +147,9 @@ public class ToH extends ScreenKTU {
                         addDiskToRod(selectedDisk, rod);
                         refresh();
                         selectedDisk = null;
-                        displayWinText();
+                       
                         if (rod.disks.size() == DISK_COUNT && rod.isCentre == false) {
-                            System.out.println("Laimėjai");
+                             displayWinText();
                         }
                     }
                 }
