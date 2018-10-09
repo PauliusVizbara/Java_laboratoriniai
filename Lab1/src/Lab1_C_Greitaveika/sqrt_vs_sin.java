@@ -11,7 +11,7 @@ import studijosKTU.Timekeeper;
  *
  * @author Paulius
  */
-public class mainas {
+public class sqrt_vs_sin {
 
     public static void main(String[] args) {
         int[] tiriamiKiekiai = {2_000, 4_000, 8_000, 16_000};

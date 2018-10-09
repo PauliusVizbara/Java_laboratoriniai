@@ -24,7 +24,7 @@ public class ToH extends ScreenKTU {
     private final int DISK_HEIGHT = 3;
     private final int ROD_HEIGHT = 23;
     private final int ROD_WIDTH = 57;
-    private final int DISK_COUNT = 7;
+    private final int DISK_COUNT = 1;
     private ArrayList<Rod> rods = new ArrayList<Rod>();
     private Disk selectedDisk = null;
     private long startTime;
@@ -150,7 +150,7 @@ public class ToH extends ScreenKTU {
                         addDiskToRod(selectedDisk, rod);
                         refresh();
                         selectedDisk = null;
-
+                        displayWinText();
                         if (rod.disks.size() == DISK_COUNT && rod.isCentre == false) {
                             System.out.println("Laimėjai");
                         }
@@ -162,6 +162,23 @@ public class ToH extends ScreenKTU {
 
     }
 
+    void displayWinText(){
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+
+        setColors(Color.GREEN, Color.green);
+        fillRect(1, 30, 0, 0);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("");
+        sb.append("LAIMĖJOTE");
+        String strI = sb.toString();
+        char[] c = strI.toCharArray();
+
+        setColors(Color.GREEN, Color.green);
+        g.drawChars(c, 0, c.length, 475, 150);
+        refresh();
+    }
+    
     void resetMoveCountDisplay() {
         setColors(Color.black, Color.green);
         fillRect(1, 30, 10, 10);
