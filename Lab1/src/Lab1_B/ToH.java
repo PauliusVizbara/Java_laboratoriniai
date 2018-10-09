@@ -24,7 +24,7 @@ public class ToH extends ScreenKTU {
     private final int DISK_HEIGHT = 3;
     private final int ROD_HEIGHT = 23;
     private final int ROD_WIDTH = 57;
-    private final int DISK_COUNT = 1;
+    private final int DISK_COUNT = 7;
     private ArrayList<Rod> rods = new ArrayList<Rod>();
     private Disk selectedDisk = null;
     private long startTime;
