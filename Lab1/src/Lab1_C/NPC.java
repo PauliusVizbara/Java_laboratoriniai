@@ -84,7 +84,7 @@ public class NPC implements KTUable<NPC> {
     }
     @Override
     public String toString(){
-        return name;
+        return String.format("%-15s| %d", name, hp);
     }
     @Override
     public final void parse(String dataString) {
