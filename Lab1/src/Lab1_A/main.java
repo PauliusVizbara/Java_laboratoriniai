@@ -12,10 +12,10 @@ import java.util.List;
  * @author Paulius
  */
 public class main {
-
+// erdvune paieksa
     public static void main(String[] args) {
         
-        TaskData taskData = FileHandler.readTaskData("data2");
+        TaskData taskData = FileHandler.readTaskData("data3");
         List<Defibrillator> defibs = taskData.getDefibrillators();
         float userLatitude = taskData.getUserLatitude();
         float userLongtitude = taskData.getUserLongitude();

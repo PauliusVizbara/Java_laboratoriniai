@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Lab1_C;
+
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -13,7 +14,7 @@ import studijosKTU.*;
  *
  * @author Paulius
  */
-public class NPC implements KTUable<NPC> {
+public class NonPlayableCharacter implements KTUable<NonPlayableCharacter> {
 
     public String getName() {
         return name;
@@ -60,42 +61,45 @@ public class NPC implements KTUable<NPC> {
     private int hp;
     private boolean isFriendly;
 
-    public NPC(){
-        
+    public NonPlayableCharacter() {
+
     }
-    public NPC(String name, double damage, double armor, int hp, boolean isFriendly) {
+
+    public NonPlayableCharacter(String name, double damage, double armor, int hp, boolean isFriendly) {
         this.name = name;
         this.damage = damage;
         this.armor = armor;
         this.hp = hp;
         this.isFriendly = isFriendly;
     }
- 
+
     @Override
-    public int compareTo(NPC other){
+    public int compareTo(NonPlayableCharacter other) {
         return name.compareTo(other.name);
     }
 
     @Override
     public KTUable create(String dataString) {
-        NPC a = new NPC();
+        NonPlayableCharacter a = new NonPlayableCharacter();
         a.parse(dataString);
         return a;
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%-15s| %d", name, hp);
     }
+
     @Override
     public final void parse(String dataString) {
         try {   // ed - tai elementarūs duomenys, atskirti tarpais
             Scanner ed = new Scanner(dataString);
-            name   = ed.next();
+            name = ed.next();
             damage = ed.nextDouble();
             armor = ed.nextDouble();
-            hp    = ed.nextInt();
+            hp = ed.nextInt();
             isFriendly = ed.nextBoolean();
-        } catch (InputMismatchException  e) {
+        } catch (InputMismatchException e) {
             Ks.ern("Blogas duomenų formatas apie NPC -> " + dataString);
         } catch (NoSuchElementException e) {
             Ks.ern("Trūksta duomenų apie NPC -> " + dataString);
@@ -106,7 +110,5 @@ public class NPC implements KTUable<NPC> {
     public String validate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
+
 }

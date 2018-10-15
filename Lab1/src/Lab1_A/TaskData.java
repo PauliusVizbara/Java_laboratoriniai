@@ -14,7 +14,21 @@ import java.util.List;
  */
 public class TaskData {
 
-    public float getUserLongitude() {
+
+    
+    private float userLongitude;
+    private float userLatitude;
+    private int defibCount;
+    private List<Defibrillator> defibrillators;
+    
+    public TaskData(float userLongitude, float userLatitude, int defibCount) {
+        this.userLongitude = userLongitude;
+        this.userLatitude = userLatitude;
+        this.defibCount = defibCount;
+        this.defibrillators = new ArrayList<>();
+    }
+    
+        public float getUserLongitude() {
         return userLongitude;
     }
 
@@ -45,18 +59,5 @@ public class TaskData {
     public void setDefibrillators(List<Defibrillator> defibrillators) {
         this.defibrillators = defibrillators;
     }
-    
-    private float userLongitude;
-    private float userLatitude;
-    private int defibCount;
-    private List<Defibrillator> defibrillators;
-    
-    public TaskData(float userLongitude, float userLatitude, int defibCount) {
-        this.userLongitude = userLongitude;
-        this.userLatitude = userLatitude;
-        this.defibCount = defibCount;
-        this.defibrillators = new ArrayList<>();
-    }
-    
     
 }

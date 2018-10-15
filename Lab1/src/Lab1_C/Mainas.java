@@ -15,10 +15,10 @@ public class Mainas {
    
     public static void main(String[] args){
         
-        CustomList<NPC> playerFaction = new CustomList<>();
-        NPC a3 = new NPC("NAUJAS",20,10,150,true);
-        NPC basicTank = new NPC("Tank1",5,10,300,true);
-        NPC basicArcher = new NPC("Archer1",10,2,100,true);
+        CustomList<NonPlayableCharacter> playerFaction = new CustomList<>();
+        NonPlayableCharacter a3 = new NonPlayableCharacter("NAUJAS",20,10,150,true);
+        NonPlayableCharacter basicTank = new NonPlayableCharacter("Tank1",5,10,300,true);
+        NonPlayableCharacter basicArcher = new NonPlayableCharacter("Archer1",10,2,100,true);
         addInfoToList(playerFaction);
         
         
@@ -40,16 +40,16 @@ public class Mainas {
         
         //System.out.println(playerFaction.contains(basicTank));
         
-        // System.out.println( playerFaction.containsAll( basicTank, basicArcher) );
+         System.out.println( playerFaction.containsAll( basicTank, basicArcher) );
     }
     
     public static void addInfoToList(CustomList faction){
-        NPC a1 = new NPC("Archer1",10,2,100,true);
-        NPC a2 = new NPC("Tank1",5,10,300,true);
-        NPC a3 = new NPC("Knight1",20,10,150,true);
-        NPC a4 = new NPC();
-        NPC a5 = new NPC();
-        NPC a6 = new NPC();
+        NonPlayableCharacter a1 = new NonPlayableCharacter("Archer1",10,2,100,true);
+        NonPlayableCharacter a2 = new NonPlayableCharacter("Tank1",5,10,300,true);
+        NonPlayableCharacter a3 = new NonPlayableCharacter("Knight1",20,10,150,true);
+        NonPlayableCharacter a4 = new NonPlayableCharacter();
+        NonPlayableCharacter a5 = new NonPlayableCharacter();
+        NonPlayableCharacter a6 = new NonPlayableCharacter();
         a4.parse("Maceman1 10 10 150 true");
         a5.parse("Maceman2 10 10 150 true");
         a6.parse("Maceman3 10 10 150 true");

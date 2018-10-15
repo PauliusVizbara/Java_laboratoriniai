@@ -54,6 +54,7 @@ public class CustomList<E extends KTUable<E>> {
             removedElement = first.element;
             first = first.next;
         }
+        
 
         for (start(); !lastElement(); next()) {
             if (counter + 1 == index) {
