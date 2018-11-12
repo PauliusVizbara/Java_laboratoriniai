@@ -97,6 +97,7 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         root = addRecursive(element, root);
     }
 
+
     private BstNode<E> addRecursive(E element, BstNode<E> node) {
         if (node == null) {
             size++;
@@ -343,11 +344,21 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      * @param element - Aibės elementas.
      * @return Grąžinamas aibės poaibis iki elemento.
      */
-    @Override
-    public SetADT<E> headSet(E element) {
-        throw new UnsupportedOperationException("Studentams reikia realizuoti headSet()");
-    }
 
+    @Override
+    public BstSetKTU<E> headSet(E element){
+        BstSetKTU<E> newSet = new BstSetKTU<>();
+        headSetRecursion(newSet, newSet.root);
+        return newSet;
+    }
+    
+  
+    private void headSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node){
+       elementSet.add(node.element);
+       if ( node.left != null){
+           headSetRecursion(elementSet, node.left);
+       }
+    }
     /**
      * Grąžinamas aibės poaibis nuo elemento element1 iki element2.
      *
