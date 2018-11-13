@@ -88,9 +88,9 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
         }
         int cmp = c.compare(element, node.element);
         if (cmp < 0) {
-            node.left = removeRecursive(element, (AVLNode<E>) node.left);
+            node.left = removeRecursive(element, (AVLNode<E>) node.left);         
         } else if (cmp > 0) {
-            node.right = removeRecursive(element, (AVLNode<E>) node.right);
+            node.right = removeRecursive(element, (AVLNode<E>) node.right);         
         } else if (node.left != null && node.right != null) {
             BstNode<E> nodeMax = getMax(node.left);
             node.element = nodeMax.element;
@@ -100,8 +100,9 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
             node = ((AVLNode<E>) node.left != null) ? (AVLNode<E>) node.left : (AVLNode<E>) node.right;
             size--;
         }
-        return node;
        
+        return node;
+
     }
 
 //==============================================================================

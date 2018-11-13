@@ -365,15 +365,17 @@ public class Lab2Window extends JFrame implements ActionListener {
     }
 
     private void treeRemove() {
+             
         KsSwing.setFormatStartOfLine(true);
         if (nonPlayableCharacterSet.isEmpty()) {
-            KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));
+            KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));      
             KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         } else {
             int nr = new Random().nextInt(nonPlayableCharacterSet.size());
             NonPlayableCharacter npc = (NonPlayableCharacter) nonPlayableCharacterSet.toArray()[nr];
             nonPlayableCharacterSet.remove(npc);
             //KsSwing.oun(taOutput, auto, MESSAGES.getString("msg6"));
+            KsSwing.oun(taOutput,"Šalinam:" + npc.toString());
             KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         }
         KsSwing.setFormatStartOfLine(false);
