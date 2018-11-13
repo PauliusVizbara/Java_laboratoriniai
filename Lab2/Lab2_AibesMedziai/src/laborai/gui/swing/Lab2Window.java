@@ -1,5 +1,6 @@
 package laborai.gui.swing;
 
+import java.util.Random;
 import Mano.NonPlayableCharacter;
 import laborai.gui.MyException;
 import laborai.studijosktu.AvlSetKTUx;
@@ -243,21 +244,11 @@ public class Lab2Window extends JFrame implements ActionListener {
             } else if (source.equals(panButtons.getButtons().get(4))) {
                 treeRemove();
             } else if (source.equals(panButtons.getButtons().get(5))) {
-                NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 200, true);
-                SortedSetADT<NonPlayableCharacter> setas = nonPlayableCharacterSet.headSet(NPC2);
-                System.out.println(setas.size());
-                KsSwing.oun(taOutput, setas.toString());
-               
-              /*KsSwing.setFormatStartOfLine(true);
-                KsSwing.ounerr(taOutput, MESSAGES.getString("msg1"));
-                KsSwing.setFormatStartOfLine(false);*/
+                treeSetsTesting();
+
             } else if (source.equals(panButtons.getButtons().get(6))) {
-                NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight1", 15, 10, 31, true);
-                NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 100, true);              
-                SortedSetADT<NonPlayableCharacter> setas = nonPlayableCharacterSet.subSet(NPC1,NPC2);
-                KsSwing.oun(taOutput, setas.toString());
-            }
-            else if (source.equals(cmbTreeType)) {
+
+            } else if (source.equals(cmbTreeType)) {
                 enableButtons(false);
             }
         } catch (MyException e) {
@@ -278,6 +269,32 @@ public class Lab2Window extends JFrame implements ActionListener {
             KsSwing.ounerr(taOutput, MESSAGES.getString("error5"));
             e.printStackTrace(System.out);
         }
+    }
+
+    public void treeSetsTesting() {
+        NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
+        SortedSetADT<NonPlayableCharacter> setas1 = nonPlayableCharacterSet.headSet(NPC1);
+        KsSwing.oun(taOutput, "HeadSet, parametras: 60");
+        KsSwing.oun(taOutput, setas1.toString());
+
+        NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 31, true);
+        NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight1", 15, 10, 100, true);
+        SortedSetADT<NonPlayableCharacter> setas2 = nonPlayableCharacterSet.subSet(NPC2, NPC3);
+        KsSwing.oun(taOutput, "SubSet, parametras: 31-100");
+        KsSwing.oun(taOutput, setas2.toString());
+
+        NonPlayableCharacter NPC4 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
+        SortedSetADT<NonPlayableCharacter> setas3 = nonPlayableCharacterSet.tailSet(NPC4);
+        KsSwing.oun(taOutput, "TailSet, parametras: 60");
+        KsSwing.oun(taOutput, setas3.toString());
+
+        NonPlayableCharacter NPC5 = new NonPlayableCharacter("Knight1", 15, 10, 70, true);
+        KsSwing.oun(taOutput, "Higher, parametras: 70");
+        KsSwing.oun(taOutput, nonPlayableCharacterSet.higher(NPC1));
+
+        KsSwing.oun(taOutput, "Didžiausias elementas: " + nonPlayableCharacterSet.pollLast());
+        KsSwing.oun(taOutput, "Medžio aukštis: " + nonPlayableCharacterSet.treeHeight());
+        
     }
 
     public void treeGeneration(String filePath) throws MyException {
@@ -302,28 +319,26 @@ public class Lab2Window extends JFrame implements ActionListener {
             // Skaitant iš failo išmaišoma standartiniu Collections.shuffle metodu.
             Collections.shuffle(Arrays.asList(autoArray), new Random());
         }*/
-
-        
         // Išmaišyto masyvo elementai surašomi i aibę
         /*autoSet.clear();
         for (Automobilis a : autoArray) {
             autoSet.add(a);
         }*/
-       NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight", 15, 10, 40, true);
-       NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
-       NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight2", 15, 10, 70, true);
-       NonPlayableCharacter NPC4 = new NonPlayableCharacter("Knight3", 15, 10, 30, true);
-      
-       
-       nonPlayableCharacterSet.add(NPC1);
-       nonPlayableCharacterSet.add(NPC2);
-       nonPlayableCharacterSet.add(NPC3);
-       nonPlayableCharacterSet.add(NPC4);   
-       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 65, true));
-       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 75, true));
-       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 80, true));
-       
-              
+        nonPlayableCharacterSet.clear();
+
+        NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight", 15, 10, 40, true);
+        NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
+        NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight2", 15, 10, 70, true);
+        NonPlayableCharacter NPC4 = new NonPlayableCharacter("Knight3", 15, 10, 30, true);
+
+        nonPlayableCharacterSet.add(NPC1);
+        nonPlayableCharacterSet.add(NPC2);
+        nonPlayableCharacterSet.add(NPC3);
+        nonPlayableCharacterSet.add(NPC4);
+        nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 65, true));
+        nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 75, true));
+        nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 80, true));
+
         //.add(new);
         // Išvedami rezultatai
         // Nustatoma, kad eilutės pradžioje neskaičiuotų išvedamų eilučių skaičiaus
@@ -336,13 +351,15 @@ public class Lab2Window extends JFrame implements ActionListener {
     }
 
     private void treeAdd() throws MyException {
-        Automobilis auto = AutoGamyba.gautiIsBazes();
-        autoSet.add(auto);
-        panParam1.getTfOfTable().get(2).setText(String.valueOf(--sizeOfLeftSubSet));
-        KsSwing.setFormatStartOfLine(true);
-        KsSwing.oun(taOutput, auto, MESSAGES.getString("msg7"));
-        KsSwing.oun(taOutput, autoSet.toVisualizedString(delimiter));
-        KsSwing.setFormatStartOfLine(false);
+
+        Random rand = new Random();
+        int randomHP = rand.nextInt(100) + 1;
+        NonPlayableCharacter randomNPC = new NonPlayableCharacter("Outsider", 1, 1, randomHP, true);
+        nonPlayableCharacterSet.add(randomNPC);
+         KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter),
+                MESSAGES.getString("msg5"));
+            
+
     }
 
     private void treeRemove() {

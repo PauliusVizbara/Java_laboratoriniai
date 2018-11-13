@@ -20,6 +20,6 @@ public class main {
          Locale.setDefault(Locale.US); // Suvienodiname skaičių formatus
         Lab2Window.createAndShowGUI();
        
-        
+       
     }
 }

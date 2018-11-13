@@ -12,6 +12,9 @@ public interface SortedSetADT<E> extends SetADT<E> {
      */
     SortedSetADT<E> headSet(E element);
 
+    E higher(E element);
+    E pollLast();
+    int treeHeight();
     /**
      * Grąžinamas aibės poaibis nuo elemento data1 iki data2.
      *

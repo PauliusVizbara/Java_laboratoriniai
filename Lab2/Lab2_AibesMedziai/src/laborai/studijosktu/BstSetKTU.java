@@ -68,6 +68,31 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         size = 0;
     }
 
+    public int treeHeight() {
+        return treeHeightRecusion(root);
+    }
+
+    int treeHeightRecusion(BstNode<E> node) {
+        if (root == null) {
+            return 0;
+        } else {
+            /* compute the depth of each subtree */
+            int lDepth;
+            if ( node.left == null) lDepth = 0;
+            else lDepth = treeHeightRecusion(node.left);
+            int rDepth;
+            if ( node.right == null) rDepth = 0;
+            else rDepth = treeHeightRecusion(node.right);
+
+            /* use the larger one */
+            if (lDepth > rDepth) {
+                return (lDepth + 1);
+            } else {
+                return (rDepth + 1);
+            }
+        }
+    }
+
     /**
      * Patikrinama ar aibėje egzistuoja elementas.
      *
@@ -97,6 +122,47 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         root = addRecursive(element, root);
     }
 
+    public boolean addAll(BstSetKTU<? extends E> elements) {
+        for (E element : elements) {
+            if (element == null) {
+                return false;
+            }
+            add(element);
+        }
+        return true;
+    }
+
+    @Override
+    public E pollLast() {
+        return pollLastRecursion(root);
+    }
+
+    public E pollLastRecursion(BstNode<E> node) {
+        if (node.right != null) {
+            return pollLastRecursion(node.right);
+        } else {
+            return node.element;
+        }
+    }
+
+    //Gražina pirmą didesnį
+    @Override
+    public E higher(E element) {
+
+        return higherRecursion(root, element);
+    }
+
+    public E higherRecursion(BstNode<E> node, E element) {
+        if (node == null) {
+            return null;
+        }
+        if (node.element.compareTo(element) > 0) {
+            return node.element;
+        } else {
+            return higherRecursion(node.right, element);
+        }
+
+    }
 
     private BstNode<E> addRecursive(E element, BstNode<E> node) {
         if (node == null) {
@@ -135,7 +201,7 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         }
         // Medyje ieškomas šalinamas elemento mazgas;
         int cmp = c.compare(element, node.element);
-           
+
         if (cmp < 0) {
             node.left = removeRecursive(element, node.left);
         } else if (cmp > 0) {
@@ -344,32 +410,33 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      * @param element - Aibės elementas.
      * @return Grąžinamas aibės poaibis iki elemento.
      */
-
     @Override
-    public SortedSetADT<E> headSet(E element){
-        
+    public SortedSetADT<E> headSet(E element) {
+
         BstSetKTU<E> newSet = new BstSetKTU<E>();
-       
+
         headSetRecursion(newSet, root, element);
-        
+
         return newSet;
-      
-   
+
     }
-    
-  
-    private void headSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element){
-       if ( element.compareTo(node.element) > 0){
-           
-         elementSet.add(node.element);
-         if ( node.right != null){
-           headSetRecursion(elementSet, node.right, element);
-         }
-       }
-       if ( node.left != null ){
-           headSetRecursion(elementSet, node.left, element);
-       }
+
+    private void headSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element) {
+        if (node == null) {
+            return;
+        }
+        if (element.compareTo(node.element) > 0) {
+
+            elementSet.add(node.element);
+            if (node.right != null) {
+                headSetRecursion(elementSet, node.right, element);
+            }
+        }
+        if (node.left != null) {
+            headSetRecursion(elementSet, node.left, element);
+        }
     }
+
     /**
      * Grąžinamas aibės poaibis nuo elemento element1 iki element2.
      *
@@ -380,26 +447,48 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
     @Override
     public SortedSetADT<E> subSet(E element1, E element2) {
         BstSetKTU<E> newSet = new BstSetKTU<E>();
-       
-        subSetRecursion(newSet, root, element1, element2);
-        
+
+        subSetRecursion(newSet, root, element1, element2, true, false);
+
         return newSet;
     }
-    
-    private void subSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element1, E element2) {
 
-    
-       if ( element1.compareTo(node.element) <= 0 && element2.compareTo(node.element) > 0){
-           
-         elementSet.add(node.element);
-         if ( node.right != null){
-           subSetRecursion(elementSet, node.right, element1, element2);
-         }
-       }
-       if ( node.left != null ){
-           subSetRecursion(elementSet, node.left, element1, element2);
-       }
+    private void subSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element1, E element2, boolean fromInclusive, boolean toInclusive) {
+        if (node == null) {
+            return;
+        }
+
+        if (fromInclusive) {
+            if (toInclusive) {
+                if (element1.compareTo(node.element) <= 0 && element2.compareTo(node.element) >= 0) {
+                    elementSet.add(node.element);
+                }
+            } else {
+                if (element1.compareTo(node.element) <= 0 && element2.compareTo(node.element) > 0) {
+                    elementSet.add(node.element);
+                }
+            }
+        } else {
+            if (toInclusive) {
+                if (element1.compareTo(node.element) < 0 && element2.compareTo(node.element) >= 0) {
+                    elementSet.add(node.element);
+                }
+            } else {
+                if (element1.compareTo(node.element) < 0 && element2.compareTo(node.element) > 0) {
+                    elementSet.add(node.element);
+                }
+            }
+        }
+
+        if (node.right != null) {
+            subSetRecursion(elementSet, node.right, element1, element2, fromInclusive, toInclusive);
+        }
+
+        if (node.left != null) {
+            subSetRecursion(elementSet, node.left, element1, element2, fromInclusive, toInclusive);
+        }
     }
+
     /**
      * Grąžinamas aibės poaibis iki elemento.
      *
@@ -408,7 +497,53 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      */
     @Override
     public SortedSetADT<E> tailSet(E element) {
-        throw new UnsupportedOperationException("Studentams reikia realizuoti tailSet()");
+
+        BstSetKTU<E> newSet = new BstSetKTU<E>();
+
+        tailSetRecursion(newSet, root, element, true);
+
+        return newSet;
+
+    }
+
+    public SortedSetADT<E> tailSet(E element, boolean inclusive) {
+        BstSetKTU<E> newSet = new BstSetKTU<E>();
+
+        tailSetRecursion(newSet, root, element, inclusive);
+
+        return newSet;
+    }
+
+    private void tailSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element, boolean inclusive) {
+        if (node == null) {
+            return;
+        }
+        if (inclusive) {
+            if (element.compareTo(node.element) <= 0) {
+
+                elementSet.add(node.element);
+
+                if (node.left != null) {
+                    tailSetRecursion(elementSet, node.left, element, inclusive);
+                }
+
+            } else {
+                if (element.compareTo(node.element) < 0) {
+
+                    elementSet.add(node.element);
+
+                    if (node.left != null) {
+                        tailSetRecursion(elementSet, node.left, element, inclusive);
+                    }
+
+                }
+            }
+        }
+
+        if (node.right != null) {
+            tailSetRecursion(elementSet, node.right, element, inclusive);
+        }
+
     }
 
     /**
@@ -431,8 +566,6 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         return new IteratorKTU(false);
 
     }
-
-    
 
     /**
      * Vidinė objektų kolekcijos iteratoriaus klasė. Iteratoriai: didėjantis ir
