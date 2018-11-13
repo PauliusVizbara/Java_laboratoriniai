@@ -6,8 +6,6 @@ import laborai.gui.MyException;
 import laborai.studijosktu.AvlSetKTUx;
 import laborai.studijosktu.SortedSetADTx;
 import laborai.studijosktu.BstSetKTUx;
-import laborai.demo.AutoGamyba;
-import laborai.demo.Automobilis;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -20,10 +18,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.ImageIcon;
@@ -38,10 +40,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
-import laborai.demo.GreitaveikosTyrimas;
+
 import laborai.studijosktu.Ks;
 import laborai.studijosktu.SetADT;
 import laborai.studijosktu.SortedSetADT;
+import laborai.studijosktu.Timekeeper;
 
 /**
  * Lab2 langas su Swing'u
@@ -90,8 +93,10 @@ public class Lab2Window extends JFrame implements ActionListener {
     private Menu menus;
     private Panels panParam1, panButtons;
 
-    private SortedSetADTx<Automobilis> autoSet;
+    // private SortedSetADTx<Automobilis> autoSet;
     private SortedSetADTx<NonPlayableCharacter> nonPlayableCharacterSet;
+    private SortedSetADTx<NonPlayableCharacter> filteredNonPlayableCharacterSet;
+
     private int sizeOfInitialSubSet, sizeOfGenSet, sizeOfLeftSubSet;
     private double coef;
     private String delimiter;
@@ -216,8 +221,8 @@ public class Lab2Window extends JFrame implements ActionListener {
         panParam1.setBackground(new Color(204, 255, 204));// Šviesiai žalia
         panParam1.getTfOfTable().get(2).setEditable(false);
         panParam1.getTfOfTable().get(2).setForeground(Color.red);
-        panParam1.getTfOfTable().get(4).setEditable(false);
-        panParam1.getTfOfTable().get(4).setBackground(Color.lightGray);
+        panParam1.getTfOfTable().get(4).setEditable(true);
+        panParam1.getTfOfTable().get(4).setBackground(Color.white);
         panButtons.setBackground(new Color(112, 162, 255)); // Blyškiai mėlyna
         panSouth.setBackground(Color.GRAY);
         taOutput.setFont(Font.decode("courier new-12"));
@@ -247,6 +252,7 @@ public class Lab2Window extends JFrame implements ActionListener {
                 treeSetsTesting();
 
             } else if (source.equals(panButtons.getButtons().get(6))) {
+               getTreeLessThanParameter();
 
             } else if (source.equals(cmbTreeType)) {
                 enableButtons(false);
@@ -271,6 +277,24 @@ public class Lab2Window extends JFrame implements ActionListener {
         }
     }
 
+    public void getTreeLessThanParameter(){
+         double maxHP;
+                if (panParam1.getParametersOfTable().get(4).length() > 0) {
+                    maxHP = Double.valueOf(panParam1.getParametersOfTable().get(4).replace(',', '.'));
+                } else {
+                    maxHP = 50;
+                }
+                
+                SortedSetADT<NonPlayableCharacter> filteredNonPlayableCharacterSetADT = nonPlayableCharacterSet.headSet(new NonPlayableCharacter("", 0, 0, maxHP, true));
+                filteredNonPlayableCharacterSet.clear();
+                for(NonPlayableCharacter npc:filteredNonPlayableCharacterSetADT){
+                    filteredNonPlayableCharacterSet.add(npc);
+                }
+                
+                  KsSwing.oun(taOutput, filteredNonPlayableCharacterSet.toVisualizedString(delimiter),
+                MESSAGES.getString("msg5"));
+                
+    }
     public void treeSetsTesting() {
         NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
         SortedSetADT<NonPlayableCharacter> setas1 = nonPlayableCharacterSet.headSet(NPC1);
@@ -294,7 +318,7 @@ public class Lab2Window extends JFrame implements ActionListener {
 
         KsSwing.oun(taOutput, "Didžiausias elementas: " + nonPlayableCharacterSet.pollLast());
         KsSwing.oun(taOutput, "Medžio aukštis: " + nonPlayableCharacterSet.treeHeight());
-        
+
     }
 
     public void treeGeneration(String filePath) throws MyException {
@@ -303,29 +327,9 @@ public class Lab2Window extends JFrame implements ActionListener {
         // Sukuriamas aibės objektas, priklausomai nuo medžio pasirinkimo
         // cmbTreeType objekte
         createTree();
-
-        /*Automobilis[] autoArray;
-        // Jei failas nenurodytas - generuojama
-        if (filePath == null) {
-            autoArray = AutoGamyba.generuotiIrIsmaisyti(sizeOfGenSet, sizeOfInitialSubSet, coef);
-            panParam1.getTfOfTable().get(2).setText(String.valueOf(sizeOfLeftSubSet));
-        } else { // Skaitoma is failo
-            autoSet.load(filePath);
-            autoArray = new Automobilis[autoSet.size()];
-            int i = 0;
-            for (Object o : autoSet.toArray()) {
-                autoArray[i++] = (Automobilis) o;
-            }
-            // Skaitant iš failo išmaišoma standartiniu Collections.shuffle metodu.
-            Collections.shuffle(Arrays.asList(autoArray), new Random());
-        }*/
-        // Išmaišyto masyvo elementai surašomi i aibę
-        /*autoSet.clear();
-        for (Automobilis a : autoArray) {
-            autoSet.add(a);
-        }*/
+       
         nonPlayableCharacterSet.clear();
-
+        
         NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight", 15, 10, 40, true);
         NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
         NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight2", 15, 10, 70, true);
@@ -356,17 +360,15 @@ public class Lab2Window extends JFrame implements ActionListener {
         int randomHP = rand.nextInt(100) + 1;
         NonPlayableCharacter randomNPC = new NonPlayableCharacter("Outsider", 1, 1, randomHP, true);
         nonPlayableCharacterSet.add(randomNPC);
-         KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter),
+        KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter),
                 MESSAGES.getString("msg5"));
-            
-
     }
 
     private void treeRemove() {
         KsSwing.setFormatStartOfLine(true);
         if (nonPlayableCharacterSet.isEmpty()) {
             KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));
-            KsSwing.oun(taOutput, autoSet.toVisualizedString(delimiter));
+            KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         } else {
             int nr = new Random().nextInt(nonPlayableCharacterSet.size());
             NonPlayableCharacter npc = (NonPlayableCharacter) nonPlayableCharacterSet.toArray()[nr];
@@ -379,62 +381,77 @@ public class Lab2Window extends JFrame implements ActionListener {
 
     private void treeIteration() {
         KsSwing.setFormatStartOfLine(true);
-        if (autoSet.isEmpty()) {
+        if (nonPlayableCharacterSet.isEmpty()) {
             KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));
         } else {
-            KsSwing.oun(taOutput, autoSet, MESSAGES.getString("msg8"));
+            KsSwing.oun(taOutput, nonPlayableCharacterSet, MESSAGES.getString("msg8"));
         }
         KsSwing.setFormatStartOfLine(false);
     }
 
     private void treeEfficiency() throws MyException {
-        KsSwing.setFormatStartOfLine(true);
-        KsSwing.oun(taOutput, "", MESSAGES.getString("msg2"));
-        KsSwing.setFormatStartOfLine(false);
-        boolean[] statesOfButtons = new boolean[panButtons.getButtons().size()];
-        for (int i = 0; i < panButtons.getButtons().size(); i++) {
-            statesOfButtons[i] = panButtons.getButtons().get(i).isEnabled();
-            panButtons.getButtons().get(i).setEnabled(false);
+        TreeSet<Integer> treeSet = new TreeSet();
+        HashSet<Integer> hashSet = new HashSet();
+
+        System.out.println("ADD METHOD");
+        int[] tiriamiKiekiai = {2_000, 4_000, 8_000, 16_000};
+        Timekeeper tk = new Timekeeper(tiriamiKiekiai);
+        Timekeeper tk2 = new Timekeeper(tiriamiKiekiai);
+        ArrayList<Integer> randomInts = new ArrayList();
+
+        Random random = new Random();
+        for (int kiekis : tiriamiKiekiai) {
+
+            for (int i = 0; i < kiekis; i++) {
+
+                int randomInt = random.nextInt(1000) + 1;
+                randomInts.add(randomInt);
+            }
+
+            tk.start();
+
+            for (int i = 0; i < kiekis; i++) {
+         
+                treeSet.add(randomInts.get(i));
+            }
+
+            tk.finish("treeSet");
+
+            for (int i = 0; i < kiekis; i++) {
+               hashSet.add(randomInts.get(i));
+            }
+
+            tk.finish("hashSet");
+
+            tk.seriesFinish();
         }
-        cmbTreeType.setEnabled(false);
-        for (Component component : menus.getComponents()) {
-            component.setEnabled(false);
+        
+        System.out.println("CONTAINS METHOD");
+        for (int kiekis : tiriamiKiekiai) {
+
+            for (int i = 0; i < kiekis; i++) {
+
+                int randomInt = random.nextInt(1000) + 1;
+                randomInts.add(randomInt);
+            }
+
+            tk2.start();
+
+            for (int i = 0; i < kiekis; i++) {
+         
+                treeSet.contains(randomInts.get(i));
+            }
+
+            tk2.finish("treeSet");
+
+            for (int i = 0; i < kiekis; i++) {
+               hashSet.contains(randomInts.get(i));
+            }
+
+            tk2.finish("hashSet");
+
+            tk2.seriesFinish();
         }
-
-        GreitaveikosTyrimas gt = new GreitaveikosTyrimas();
-
-        // Sukuriamos dvi tuscios gijos. Panaudojamas Java Executor servisas.
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-
-        // Si gija paima rezultatus is greitaveikos tyrimo gijos ir isveda 
-        // juos i taOutput. Gija baigia darbą kai gaunama FINISH_COMMAND
-        executorService.submit(() -> {
-            KsSwing.setFormatStartOfLine(false);
-            try {
-                String result;
-                while (!(result = gt.getResultsLogger().take())
-                        .equals(GreitaveikosTyrimas.FINISH_COMMAND)) {
-                    KsSwing.ou(taOutput, result);
-                    gt.getSemaphore().release();
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
-            gt.getSemaphore().release();
-
-            for (int i = 0; i < panButtons.getButtons().size(); i++) {
-                panButtons.getButtons().get(i).setEnabled(statesOfButtons[i]);
-            }
-            cmbTreeType.setEnabled(true);
-            for (Component component : menus.getComponents()) {
-                component.setEnabled(true);
-            }
-        });
-
-        //Sioje gijoje atliekamas greitaveikos tyrimas
-        executorService.submit(() -> gt.pradetiTyrima());
-        executorService.shutdown();
     }
 
     private void readTreeParameters() throws MyException {
@@ -465,11 +482,11 @@ public class Lab2Window extends JFrame implements ActionListener {
     private void createTree() throws MyException {
         switch (cmbTreeType.getSelectedIndex()) {
             case 0:
-                autoSet = new BstSetKTUx(new Automobilis());
+                filteredNonPlayableCharacterSet = new BstSetKTUx(new NonPlayableCharacter());
                 nonPlayableCharacterSet = new BstSetKTUx(new NonPlayableCharacter());
                 break;
             case 1:
-                autoSet = new BstSetKTUx(new Automobilis());
+                filteredNonPlayableCharacterSet = new BstSetKTUx(new NonPlayableCharacter());
                 nonPlayableCharacterSet = new AvlSetKTUx(new NonPlayableCharacter());
                 break;
             default:

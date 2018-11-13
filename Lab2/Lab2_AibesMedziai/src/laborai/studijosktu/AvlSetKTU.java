@@ -74,11 +74,34 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
      */
     @Override
     public void remove(E element) {
-        throw new UnsupportedOperationException("Studentams reikia realizuoti remove(E element)");
+        if (element == null) {
+            throw new IllegalArgumentException("Element is null in remove(E element)");
+        }
+
+        root = removeRecursive(element, (AVLNode<E>) root);
+
     }
 
-    private AVLNode<E> removeRecursive(E element, AVLNode<E> n) {
-        throw new UnsupportedOperationException("Studentams reikia realizuoti removeRecursive(E element, AVLNode<E> n)");
+    private AVLNode<E> removeRecursive(E element, AVLNode<E> node) {
+        if (node == null) {
+            return node;
+        }
+        int cmp = c.compare(element, node.element);
+        if (cmp < 0) {
+            node.left = removeRecursive(element, (AVLNode<E>) node.left);
+        } else if (cmp > 0) {
+            node.right = removeRecursive(element, (AVLNode<E>) node.right);
+        } else if (node.left != null && node.right != null) {
+            BstNode<E> nodeMax = getMax(node.left);
+            node.element = nodeMax.element;
+            node.left = removeMax(node.left);
+            size--;
+        } else {
+            node = ((AVLNode<E>) node.left != null) ? (AVLNode<E>) node.left : (AVLNode<E>) node.right;
+            size--;
+        }
+        return node;
+       
     }
 
 //==============================================================================

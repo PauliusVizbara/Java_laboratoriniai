@@ -22,14 +22,14 @@ public class NonPlayableCharacter implements KTUable<NonPlayableCharacter> {
     private String name;
     private double damage;
     private double armor;
-    private int hp;
+    private double hp;
     private boolean isFriendly;
 
     public NonPlayableCharacter() {
 
     }
     
-    public NonPlayableCharacter(String name, double damage, double armor, int hp, boolean isFriendly) {
+    public NonPlayableCharacter(String name, double damage, double armor, double hp, boolean isFriendly) {
         this.name = name;
         this.damage = damage;
         this.armor = armor;
@@ -61,7 +61,7 @@ public class NonPlayableCharacter implements KTUable<NonPlayableCharacter> {
         this.armor = armor;
     }
 
-    public int getHp() {
+    public double getHp() {
         return hp;
     }
 
