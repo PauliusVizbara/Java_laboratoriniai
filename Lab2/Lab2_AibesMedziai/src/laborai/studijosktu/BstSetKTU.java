@@ -346,17 +346,28 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      */
 
     @Override
-    public BstSetKTU<E> headSet(E element){
-        BstSetKTU<E> newSet = new BstSetKTU<>();
-        headSetRecursion(newSet, newSet.root);
+    public SortedSetADT<E> headSet(E element){
+        
+        BstSetKTU<E> newSet = new BstSetKTU<E>();
+       
+        headSetRecursion(newSet, root, element);
+        
         return newSet;
+      
+   
     }
     
   
-    private void headSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node){
-       elementSet.add(node.element);
-       if ( node.left != null){
-           headSetRecursion(elementSet, node.left);
+    private void headSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element){
+       if ( element.compareTo(node.element) > 0){
+           
+         elementSet.add(node.element);
+         if ( node.right != null){
+           headSetRecursion(elementSet, node.right, element);
+         }
+       }
+       if ( node.left != null ){
+           headSetRecursion(elementSet, node.left, element);
        }
     }
     /**
@@ -367,10 +378,28 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      * @return Grąžinamas aibės poaibis nuo elemento element1 iki element2.
      */
     @Override
-    public SetADT<E> subSet(E element1, E element2) {
-        throw new UnsupportedOperationException("Studentams reikia realizuoti subSet()");
+    public SortedSetADT<E> subSet(E element1, E element2) {
+        BstSetKTU<E> newSet = new BstSetKTU<E>();
+       
+        subSetRecursion(newSet, root, element1, element2);
+        
+        return newSet;
     }
+    
+    private void subSetRecursion(BstSetKTU<E> elementSet, BstNode<E> node, E element1, E element2) {
 
+    
+       if ( element1.compareTo(node.element) <= 0 && element2.compareTo(node.element) > 0){
+           
+         elementSet.add(node.element);
+         if ( node.right != null){
+           subSetRecursion(elementSet, node.right, element1, element2);
+         }
+       }
+       if ( node.left != null ){
+           subSetRecursion(elementSet, node.left, element1, element2);
+       }
+    }
     /**
      * Grąžinamas aibės poaibis iki elemento.
      *
@@ -378,7 +407,7 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      * @return Grąžinamas aibės poaibis nuo elemento.
      */
     @Override
-    public SetADT<E> tailSet(E element) {
+    public SortedSetADT<E> tailSet(E element) {
         throw new UnsupportedOperationException("Studentams reikia realizuoti tailSet()");
     }
 
@@ -402,6 +431,8 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
         return new IteratorKTU(false);
 
     }
+
+    
 
     /**
      * Vidinė objektų kolekcijos iteratoriaus klasė. Iteratoriai: didėjantis ir

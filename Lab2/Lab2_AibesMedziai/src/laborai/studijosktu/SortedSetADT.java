@@ -10,7 +10,7 @@ public interface SortedSetADT<E> extends SetADT<E> {
      * @param element - Aibės elementas.
      * @return Grąžinamas aibės poaibis iki elemento data.
      */
-    SetADT<E> headSet(E element);
+    SortedSetADT<E> headSet(E element);
 
     /**
      * Grąžinamas aibės poaibis nuo elemento data1 iki data2.
@@ -19,7 +19,7 @@ public interface SortedSetADT<E> extends SetADT<E> {
      * @param element2 - galinis aibės poaibio elementas.
      * @return Grąžinamas aibės poaibis nuo elemento data1 iki data2.
      */
-    SetADT<E> subSet(E element1, E element2);
+    SortedSetADT<E> subSet(E element1, E element2);
 
     /**
      * Grąžinamas aibės poaibis iki elemento data.
@@ -27,7 +27,7 @@ public interface SortedSetADT<E> extends SetADT<E> {
      * @param element - Aibės elementas.
      * @return Grąžinamas aibės poaibis nuo elemento data.
      */
-    SetADT<E> tailSet(E element);
+    SortedSetADT<E> tailSet(E element);
 
     /**
      * Grąžinamas atvirkštinis iteratorius.

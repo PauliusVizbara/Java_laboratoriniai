@@ -39,6 +39,8 @@ import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import laborai.demo.GreitaveikosTyrimas;
 import laborai.studijosktu.Ks;
+import laborai.studijosktu.SetADT;
+import laborai.studijosktu.SortedSetADT;
 
 /**
  * Lab2 langas su Swing'u
@@ -240,12 +242,22 @@ public class Lab2Window extends JFrame implements ActionListener {
                 treeEfficiency();
             } else if (source.equals(panButtons.getButtons().get(4))) {
                 treeRemove();
-            } else if (source.equals(panButtons.getButtons().get(5))
-                    || source.equals(panButtons.getButtons().get(6))) {
-                KsSwing.setFormatStartOfLine(true);
+            } else if (source.equals(panButtons.getButtons().get(5))) {
+                NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 200, true);
+                SortedSetADT<NonPlayableCharacter> setas = nonPlayableCharacterSet.headSet(NPC2);
+                System.out.println(setas.size());
+                KsSwing.oun(taOutput, setas.toString());
+               
+              /*KsSwing.setFormatStartOfLine(true);
                 KsSwing.ounerr(taOutput, MESSAGES.getString("msg1"));
-                KsSwing.setFormatStartOfLine(false);
-            } else if (source.equals(cmbTreeType)) {
+                KsSwing.setFormatStartOfLine(false);*/
+            } else if (source.equals(panButtons.getButtons().get(6))) {
+                NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight1", 15, 10, 31, true);
+                NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 100, true);              
+                SortedSetADT<NonPlayableCharacter> setas = nonPlayableCharacterSet.subSet(NPC1,NPC2);
+                KsSwing.oun(taOutput, setas.toString());
+            }
+            else if (source.equals(cmbTreeType)) {
                 enableButtons(false);
             }
         } catch (MyException e) {
@@ -301,12 +313,17 @@ public class Lab2Window extends JFrame implements ActionListener {
        NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
        NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight2", 15, 10, 70, true);
        NonPlayableCharacter NPC4 = new NonPlayableCharacter("Knight3", 15, 10, 30, true);
+      
        
        nonPlayableCharacterSet.add(NPC1);
        nonPlayableCharacterSet.add(NPC2);
        nonPlayableCharacterSet.add(NPC3);
-       nonPlayableCharacterSet.add(NPC4);
+       nonPlayableCharacterSet.add(NPC4);   
+       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 65, true));
+       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 75, true));
+       nonPlayableCharacterSet.add(new NonPlayableCharacter("Knight3", 13, 10, 80, true));
        
+              
         //.add(new);
         // Išvedami rezultatai
         // Nustatoma, kad eilutės pradžioje neskaičiuotų išvedamų eilučių skaičiaus
