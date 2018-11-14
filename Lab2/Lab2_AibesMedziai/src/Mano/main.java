@@ -6,9 +6,6 @@
 package Mano;
 
 import java.util.Locale;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentSkipListSet;
 import laborai.gui.swing.Lab2Window;
 
 /**

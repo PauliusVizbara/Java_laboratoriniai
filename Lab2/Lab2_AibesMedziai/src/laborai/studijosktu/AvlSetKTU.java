@@ -66,7 +66,8 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
         node.height = Math.max(height(node.getLeft()), height(node.getRight())) + 1;
         return node;
     }
-
+    
+   
     /**
      * Pašalinamas elementas iš aibės.
      *

@@ -252,7 +252,7 @@ public class Lab2Window extends JFrame implements ActionListener {
                 treeSetsTesting();
 
             } else if (source.equals(panButtons.getButtons().get(6))) {
-               getTreeLessThanParameter();
+                getTreeLessThanParameter();
 
             } else if (source.equals(cmbTreeType)) {
                 enableButtons(false);
@@ -277,24 +277,25 @@ public class Lab2Window extends JFrame implements ActionListener {
         }
     }
 
-    public void getTreeLessThanParameter(){
-         double maxHP;
-                if (panParam1.getParametersOfTable().get(4).length() > 0) {
-                    maxHP = Double.valueOf(panParam1.getParametersOfTable().get(4).replace(',', '.'));
-                } else {
-                    maxHP = 50;
-                }
-                
-                SortedSetADT<NonPlayableCharacter> filteredNonPlayableCharacterSetADT = nonPlayableCharacterSet.headSet(new NonPlayableCharacter("", 0, 0, maxHP, true));
-                filteredNonPlayableCharacterSet.clear();
-                for(NonPlayableCharacter npc:filteredNonPlayableCharacterSetADT){
-                    filteredNonPlayableCharacterSet.add(npc);
-                }
-                
-                  KsSwing.oun(taOutput, filteredNonPlayableCharacterSet.toVisualizedString(delimiter),
+    public void getTreeLessThanParameter() {
+        double maxHP;
+        if (panParam1.getParametersOfTable().get(4).length() > 0) {
+            maxHP = Double.valueOf(panParam1.getParametersOfTable().get(4).replace(',', '.'));
+        } else {
+            maxHP = 50;
+        }
+
+        SortedSetADT<NonPlayableCharacter> filteredNonPlayableCharacterSetADT = nonPlayableCharacterSet.headSet(new NonPlayableCharacter("", 0, 0, maxHP, true));
+        filteredNonPlayableCharacterSet.clear();
+        for (NonPlayableCharacter npc : filteredNonPlayableCharacterSetADT) {
+            filteredNonPlayableCharacterSet.add(npc);
+        }
+
+        KsSwing.oun(taOutput, filteredNonPlayableCharacterSet.toVisualizedString(delimiter),
                 MESSAGES.getString("msg5"));
-                
+
     }
+
     public void treeSetsTesting() {
         NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
         SortedSetADT<NonPlayableCharacter> setas1 = nonPlayableCharacterSet.headSet(NPC1);
@@ -327,9 +328,9 @@ public class Lab2Window extends JFrame implements ActionListener {
         // Sukuriamas aibės objektas, priklausomai nuo medžio pasirinkimo
         // cmbTreeType objekte
         createTree();
-       
+
         nonPlayableCharacterSet.clear();
-        
+
         NonPlayableCharacter NPC1 = new NonPlayableCharacter("Knight", 15, 10, 40, true);
         NonPlayableCharacter NPC2 = new NonPlayableCharacter("Knight1", 15, 10, 60, true);
         NonPlayableCharacter NPC3 = new NonPlayableCharacter("Knight2", 15, 10, 70, true);
@@ -365,17 +366,28 @@ public class Lab2Window extends JFrame implements ActionListener {
     }
 
     private void treeRemove() {
-             
+        double searchingHP;
+        if (panParam1.getParametersOfTable().get(4).length() > 0) {
+            searchingHP = Double.valueOf(panParam1.getParametersOfTable().get(4).replace(',', '.'));
+        } else {
+            searchingHP = 50;
+        }
+
         KsSwing.setFormatStartOfLine(true);
         if (nonPlayableCharacterSet.isEmpty()) {
-            KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));      
+            KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));
             KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         } else {
+            
             int nr = new Random().nextInt(nonPlayableCharacterSet.size());
-            NonPlayableCharacter npc = (NonPlayableCharacter) nonPlayableCharacterSet.toArray()[nr];
-            nonPlayableCharacterSet.remove(npc);
+            NonPlayableCharacter tempNpc = (NonPlayableCharacter) nonPlayableCharacterSet.toArray()[nr];
+            
+            for(NonPlayableCharacter npc:nonPlayableCharacterSet){
+                if ( npc.getHp() == searchingHP ) tempNpc = npc;
+            }
+            nonPlayableCharacterSet.remove(tempNpc);
             //KsSwing.oun(taOutput, auto, MESSAGES.getString("msg6"));
-            KsSwing.oun(taOutput,"Šalinam:" + npc.toString());
+            KsSwing.oun(taOutput, "Šalinam:" + tempNpc.toString());
             KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         }
         KsSwing.setFormatStartOfLine(false);
@@ -413,21 +425,21 @@ public class Lab2Window extends JFrame implements ActionListener {
             tk.start();
 
             for (int i = 0; i < kiekis; i++) {
-         
+
                 treeSet.add(randomInts.get(i));
             }
 
             tk.finish("treeSet");
 
             for (int i = 0; i < kiekis; i++) {
-               hashSet.add(randomInts.get(i));
+                hashSet.add(randomInts.get(i));
             }
 
             tk.finish("hashSet");
 
             tk.seriesFinish();
         }
-        
+
         System.out.println("CONTAINS METHOD");
         for (int kiekis : tiriamiKiekiai) {
 
@@ -440,14 +452,14 @@ public class Lab2Window extends JFrame implements ActionListener {
             tk2.start();
 
             for (int i = 0; i < kiekis; i++) {
-         
+
                 treeSet.contains(randomInts.get(i));
             }
 
             tk2.finish("treeSet");
 
             for (int i = 0; i < kiekis; i++) {
-               hashSet.contains(randomInts.get(i));
+                hashSet.contains(randomInts.get(i));
             }
 
             tk2.finish("hashSet");
