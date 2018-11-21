@@ -1,5 +1,6 @@
 package laborai.gui.swing;
 
+import Mano.GreitaveikosTyrimas;
 import java.util.Random;
 import Mano.NonPlayableCharacter;
 import laborai.gui.MyException;
@@ -44,7 +45,6 @@ import javax.swing.border.TitledBorder;
 import laborai.studijosktu.Ks;
 import laborai.studijosktu.SetADT;
 import laborai.studijosktu.SortedSetADT;
-import laborai.studijosktu.Timekeeper;
 
 /**
  * Lab2 langas su Swing'u
@@ -378,12 +378,14 @@ public class Lab2Window extends JFrame implements ActionListener {
             KsSwing.ounerr(taOutput, MESSAGES.getString("msg4"));
             KsSwing.oun(taOutput, nonPlayableCharacterSet.toVisualizedString(delimiter));
         } else {
-            
+
             int nr = new Random().nextInt(nonPlayableCharacterSet.size());
             NonPlayableCharacter tempNpc = (NonPlayableCharacter) nonPlayableCharacterSet.toArray()[nr];
-            
-            for(NonPlayableCharacter npc:nonPlayableCharacterSet){
-                if ( npc.getHp() == searchingHP ) tempNpc = npc;
+
+            for (NonPlayableCharacter npc : nonPlayableCharacterSet) {
+                if (npc.getHp() == searchingHP) {
+                    tempNpc = npc;
+                }
             }
             nonPlayableCharacterSet.remove(tempNpc);
             //KsSwing.oun(taOutput, auto, MESSAGES.getString("msg6"));
@@ -404,68 +406,53 @@ public class Lab2Window extends JFrame implements ActionListener {
     }
 
     private void treeEfficiency() throws MyException {
-        TreeSet<Integer> treeSet = new TreeSet();
-        HashSet<Integer> hashSet = new HashSet();
-
-        System.out.println("ADD METHOD");
-        int[] tiriamiKiekiai = {2_000, 4_000, 8_000, 16_000};
-        Timekeeper tk = new Timekeeper(tiriamiKiekiai);
-        Timekeeper tk2 = new Timekeeper(tiriamiKiekiai);
-        ArrayList<Integer> randomInts = new ArrayList();
-
-        Random random = new Random();
-        for (int kiekis : tiriamiKiekiai) {
-
-            for (int i = 0; i < kiekis; i++) {
-
-                int randomInt = random.nextInt(1000) + 1;
-                randomInts.add(randomInt);
-            }
-
-            tk.start();
-
-            for (int i = 0; i < kiekis; i++) {
-
-                treeSet.add(randomInts.get(i));
-            }
-
-            tk.finish("treeSet");
-
-            for (int i = 0; i < kiekis; i++) {
-                hashSet.add(randomInts.get(i));
-            }
-
-            tk.finish("hashSet");
-
-            tk.seriesFinish();
+        KsSwing.setFormatStartOfLine(true);
+        KsSwing.oun(taOutput, "", MESSAGES.getString("msg2"));
+        KsSwing.setFormatStartOfLine(false);
+        boolean[] statesOfButtons = new boolean[panButtons.getButtons().size()];
+        for (int i = 0; i < panButtons.getButtons().size(); i++) {
+            statesOfButtons[i] = panButtons.getButtons().get(i).isEnabled();
+            panButtons.getButtons().get(i).setEnabled(false);
+        }
+        cmbTreeType.setEnabled(false);
+        for (Component component : menus.getComponents()) {
+            component.setEnabled(false);
         }
 
-        System.out.println("CONTAINS METHOD");
-        for (int kiekis : tiriamiKiekiai) {
+        GreitaveikosTyrimas gt = new GreitaveikosTyrimas();
 
-            for (int i = 0; i < kiekis; i++) {
+        // Sukuriamos dvi tuscios gijos. Panaudojamas Java Executor servisas.
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-                int randomInt = random.nextInt(1000) + 1;
-                randomInts.add(randomInt);
+        // Si gija paima rezultatus is greitaveikos tyrimo gijos ir isveda 
+        // juos i taOutput. Gija baigia darbą kai gaunama FINISH_COMMAND
+        executorService.submit(() -> {
+            KsSwing.setFormatStartOfLine(false);
+            try {
+                String result;
+                while (!(result = gt.getResultsLogger().take())
+                        .equals(GreitaveikosTyrimas.FINISH_COMMAND)) {
+                    KsSwing.ou(taOutput, result);
+                    gt.getSemaphore().release();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
 
-            tk2.start();
+            gt.getSemaphore().release();
 
-            for (int i = 0; i < kiekis; i++) {
-
-                treeSet.contains(randomInts.get(i));
+            for (int i = 0; i < panButtons.getButtons().size(); i++) {
+                panButtons.getButtons().get(i).setEnabled(statesOfButtons[i]);
             }
-
-            tk2.finish("treeSet");
-
-            for (int i = 0; i < kiekis; i++) {
-                hashSet.contains(randomInts.get(i));
+            cmbTreeType.setEnabled(true);
+            for (Component component : menus.getComponents()) {
+                component.setEnabled(true);
             }
+        });
 
-            tk2.finish("hashSet");
-
-            tk2.seriesFinish();
-        }
+        //Sioje gijoje atliekamas greitaveikos tyrimas
+        executorService.submit(() -> gt.pradetiTyrima());
+        executorService.shutdown();
     }
 
     private void readTreeParameters() throws MyException {

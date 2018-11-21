@@ -497,20 +497,15 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
      */
     @Override
     public SortedSetADT<E> tailSet(E element) {
-
         BstSetKTU<E> newSet = new BstSetKTU<E>();
-
         tailSetRecursion(newSet, root, element, true);
-
         return newSet;
 
     }
 
     public SortedSetADT<E> tailSet(E element, boolean inclusive) {
         BstSetKTU<E> newSet = new BstSetKTU<E>();
-
         tailSetRecursion(newSet, root, element, inclusive);
-
         return newSet;
     }
 
@@ -610,7 +605,10 @@ public class BstSetKTU<E extends Comparable<E>> implements SortedSetADT<E>, Clon
 
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("Studentams reikia realizuoti remove()");
+            if (stack.size() == 1) stack.pop();
+            else {
+                return;
+            }
         }
 
         private void toStack(BstNode<E> n) {

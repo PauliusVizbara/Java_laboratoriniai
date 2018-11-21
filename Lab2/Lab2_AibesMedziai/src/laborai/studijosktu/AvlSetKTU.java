@@ -76,10 +76,31 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
     public void remove(E element) {
         if (element == null) {
             throw new IllegalArgumentException("Element is null in remove(E element)");
+           
         }
 
         root = removeRecursive(element, (AVLNode<E>) root);
 
+        treeBalancing((AVLNode<E>) root);
+
+    }
+
+    private AVLNode<E> treeBalancing(AVLNode<E> node) {
+        if (node.left != null) {
+            node.left = treeBalancing((AVLNode<E>) node.left);
+        }
+        if (node.right != null) {
+            node.right = treeBalancing((AVLNode<E>) node.right);
+        }
+
+        int height = (height(node.getRight()) - height(node.getLeft()));
+        if ( height == 2){
+            leftRotation(node);
+        }
+        if ( height == -2){
+            rightRotation(node);
+        }
+        return node;
     }
 
     private AVLNode<E> removeRecursive(E element, AVLNode<E> node) {
@@ -89,26 +110,17 @@ public class AvlSetKTU<E extends Comparable<E>> extends BstSetKTU<E>
         int cmp = c.compare(element, node.element);
         if (cmp < 0) {
             node.left = removeRecursive(element, (AVLNode<E>) node.left);
-           if ((height(node.getRight()) - height(node.getLeft())) == 2) {
-                int cmp2 = c.compare(node.getRight().element, element);
-                node = (cmp2 < 0) ? leftRotation(node) : doubleLeftRotation(node);
-            }
-            
+
+
         } else if (cmp > 0) {
             node.right = removeRecursive(element, (AVLNode<E>) node.right);
-            if ((height(node.getLeft()) - height(node.getRight())) == 2) {
-                int cmp2 = c.compare(element, node.getLeft().element);
-                node = (cmp2 < 0) ? rightRotation(node) : doubleRightRotation(node);
-            }
             
+
         } else if (node.left != null && node.right != null) {
             BstNode<E> nodeMax = getMax(node.left);
             node.element = nodeMax.element;
-            node.left = removeMax(node.left);         
-            if ((height(node.getRight()) - height(node.getLeft())) == 2) {
-                int cmp2 = c.compare(node.getRight().element, element);
-                node = (cmp2 < 0) ? leftRotation(node) : doubleLeftRotation(node);
-            }
+            node.left = removeMax(node.left);
+            
             size--;
         } else {
             node = ((AVLNode<E>) node.left != null) ? (AVLNode<E>) node.left : (AVLNode<E>) node.right;
