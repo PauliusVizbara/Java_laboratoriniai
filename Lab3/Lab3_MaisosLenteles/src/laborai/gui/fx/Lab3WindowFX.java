@@ -9,8 +9,6 @@ import java.io.File;
 import java.util.List;
 import laborai.studijosktu.MapADTx;
 import laborai.studijosktu.HashType;
-import laborai.demo.Automobilis;
-import laborai.demo.AutoGamyba;
 import laborai.gui.MyException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -311,7 +309,7 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
             } catch (MyException e) {
                 KsFX.ounerr(taEvents, MESSAGES.getString(e.getMessage()), e.getValue());
             } catch (UnsupportedOperationException e) {
-                KsFX.ounerr(taEvents, e.getMessage());
+            KsFX.ounerr(taEvents, e.getMessage());
             } catch (Exception e) {
                 KsFX.ounerr(taEvents, MESSAGES.getString("systemError"));
                 e.printStackTrace(System.out);
@@ -327,7 +325,10 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
         } else if (source.equals(paneButtons.getButtons().get(2))) {
             mapEfficiency();
         } else if (source.equals(paneButtons.getButtons().get(3))) {
-            KsFX.ounerr(taEvents, MESSAGES.getString("notImplemented"));
+            if (map.containsValue( new NonPlayableCharacter("Knigh", 10, 20, 20, true))){
+                KsFX.ounArgs(taEvents, "Toks elementas yra");
+            }
+            else KsFX.ounArgs(taEvents, "Tokio elemento nėra");
         }
     }
 

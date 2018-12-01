@@ -27,6 +27,7 @@ public interface MapADT<K, V> {
      *
      */
     void clear();
+    boolean containsValue(V value);
 
     String[][] toArray();
 

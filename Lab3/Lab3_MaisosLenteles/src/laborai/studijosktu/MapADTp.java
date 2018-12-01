@@ -19,6 +19,7 @@ public interface MapADTp<K, V> extends MapADT<K, V> {
      *
      * @return Permaišymų kiekis.
      */
+    
     int getRehashesCounter();
 
     /**
