@@ -9,6 +9,7 @@ import laborai.studijosktu.Ks;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -33,6 +34,10 @@ public final class NonPlayableCharacter implements KTUable {
         this.armor = armor;
         this.hp = hp;
         this.isFriendly = isFriendly;
+    }
+
+    private NonPlayableCharacter(Builder aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public String getName() {
@@ -79,6 +84,9 @@ public final class NonPlayableCharacter implements KTUable {
     public int hashCode() {
         return Objects.hash(name, damage, hp, armor, isFriendly);
     }
+    
+    
+    
 @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -140,4 +148,57 @@ public final class NonPlayableCharacter implements KTUable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+        // Automobilis klases objektų gamintojas
+    public static class Builder {
+
+        private final static Random RANDOM = new Random(1949);  // Atsitiktinių generatorius
+        private final static String[][] MODELIAI = { // galimų automobilių markių ir jų modelių masyvas
+            {"Knight", "Tank", "Mage", "Assassin", "Summoner","Archer","Builder"},
+        };
+
+        private String markė = "";
+        private String modelis = "";
+        private int gamMetai = -1;
+        private int rida = -1;
+        private double kaina = -1.0;
+
+        public NonPlayableCharacter build() {
+            return new NonPlayableCharacter(this);
+        }
+
+        public NonPlayableCharacter buildRandom() {
+            int ma = RANDOM.nextInt(MODELIAI.length);        // markės indeksas  0..
+            int mo = RANDOM.nextInt(MODELIAI[ma].length - 1) + 1;// modelio indeksas 1..              
+            return new NonPlayableCharacter(MODELIAI[ma][0],
+                    RANDOM.nextInt(100)+1,// metai tarp 1990 ir 2009
+                    RANDOM.nextInt(100)+1,// metai tarp 1990 ir 2009
+                    RANDOM.nextInt(100)+1,// rida tarp 6000 ir 228000
+                    RANDOM.nextBoolean());// kaina tarp 800 ir 88800
+        }
+
+       /* public Builder gamMetai(int gamMetai) {
+            this.gamMetai = gamMetai;
+            return this;
+        }
+
+        public Builder markė(String markė) {
+            this.markė = markė;
+            return this;
+        }
+
+        public Builder modelis(String modelis) {
+            this.modelis = modelis;
+            return this;
+        }
+
+        public Builder rida(int rida) {
+            this.rida = rida;
+            return this;
+        }
+
+        public Builder kaina(double kaina) {
+            this.kaina = kaina;
+            return this;
+        }*/
+    }
 }

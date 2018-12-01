@@ -1,7 +1,10 @@
 package laborai.gui.fx;
 
+
+
+import Mano.*;
 import Mano.NonPlayableCharacter;
-import Mano.NonPlayAbleCharacterGenerator;
+
 import java.io.File;
 import java.util.List;
 import laborai.studijosktu.MapADTx;
@@ -97,7 +100,7 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
     private int sizeOfInitialSubSet, sizeOfGenSet, colWidth, initialCapacity;
     private float loadFactor;
     private HashType ht = HashType.DIVISION;
-    private final NonPlayAbleCharacterGenerator nonPlayAbleCharacterGenerator = new NonPlayAbleCharacterGenerator();
+    private final NpcMaker npcMaker = new NpcMaker();
 
     public Lab3WindowFX(Stage stage) {
         this.stage = stage;
@@ -335,21 +338,23 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
         readMapParameters();
         // Sukuriamas tuščias atvaizdis priklausomai nuo kolizijų tipo
         createMap();
-        nonPlayAbleCharacterGenerator.setNPCS(TF_WIDTH);
-        
         // Jei failas nenurodytas - generuojami automobiliai ir talpinami atvaizdyje
         if (filePath == null) {
-            NonPlayableCharacter[] npcArray = nonPlayAbleCharacterGenerator.genereateNPCS(TF_WIDTH);
-            
-            
-            for (NonPlayableCharacter npc : npcArray) {
+            NonPlayableCharacter[] autoArray = npcMaker.makeAndSetNpcs(sizeOfGenSet, sizeOfInitialSubSet);
+            for (NonPlayableCharacter a : autoArray) {
                 map.put(
-                        nonPlayAbleCharacterGenerator.getNpcId(), //raktas
-                        npc);
+                        npcMaker.getIdFromBase(), //raktas
+                        a);
             }
             KsFX.ounArgs(taEvents, MESSAGES.getString("msg1"), map.size());
-        } 
-          
+        } else { // Jei failas nurodytas skaitoma iš failo
+            map.load(filePath);
+            if (map.isEmpty()) {
+                KsFX.ounerr(taEvents, MESSAGES.getString("msg6"), filePath);
+            } else {
+                KsFX.ou(taEvents, MESSAGES.getString("msg5"), filePath);
+            }
+        }
 
         // Atvaizdis rodomas lentelėje
         table.formTable(map.getMaxChainSize() * 2 + 1, colWidth);
@@ -363,15 +368,15 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
     }
 
     public void mapAdd() {
-       /* Automobilis a = autoGamyba.parduotiAutomobili();
+        NonPlayableCharacter a = npcMaker.setNpc();
         map.put(
-                autoGamyba.gautiIsBazesAutoId(), // Raktas
+                npcMaker.getIdFromBase(), // Raktas
                 a);
         table.formTable(map.getMaxChainSize() * 2 + 1, colWidth);
         String[][] modelList = map.getModelList(paneParam1.getTfOfTable().get(5).getText());
         table.setItems(FXCollections.observableArrayList(modelList));
         updateHashtableParameters(true);
-        KsFX.oun(taEvents, a, MESSAGES.getString("msg2"));*/
+        KsFX.oun(taEvents, a, MESSAGES.getString("msg2"));
     }
 
     public void mapEfficiency() {
@@ -434,14 +439,9 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
 
     private void createMap() {
         switch (cmbCollisionTypes.getSelectionModel().getSelectedIndex()) {
-            case 3:
-                map = new MapKTUx<>(new String(), new NonPlayableCharacter(), initialCapacity, loadFactor, ht);               
-                break;
             case 0:
                 map = new MapKTUx<>(new String(), new NonPlayableCharacter(), initialCapacity, loadFactor, ht);
                 break;
-                
-             
             // ...
             // Programuojant kitus kolizijų sprendimo metodus reikia papildyti switch sakinį
             default:
