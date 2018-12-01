@@ -132,6 +132,18 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
         return false;   
     }
     
+    public boolean removeAt(int index){
+         Node<K, V> node = null;
+        if ( table[index] != null){
+           table[index] = null;
+           return true;
+         
+        }
+    
+        return false;
+        
+    }
+    
     /**
      * Atvaizdis papildomas nauja pora.
      *
@@ -139,6 +151,9 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
      * @param value reikšmė.
      * @return Atvaizdis papildomas nauja pora.
      */
+    
+    
+    
     @Override
     public V put(K key, V value) {
         if (key == null || value == null) {

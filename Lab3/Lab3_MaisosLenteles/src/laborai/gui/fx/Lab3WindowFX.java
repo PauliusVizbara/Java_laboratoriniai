@@ -329,6 +329,16 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
                 KsFX.ounArgs(taEvents, "Toks elementas yra");
             }
             else KsFX.ounArgs(taEvents, "Tokio elemento nėra");
+            
+           if ( !paneParam3.getTfOfTable().get(0).getText().equals("") ) {
+           int removeIndex = Integer.parseInt(paneParam3.getTfOfTable().get(0).getText());
+            map.removeAt(removeIndex);
+             String[][] modelList = map.getModelList(paneParam1.getTfOfTable().get(5).getText());
+             table.setItems(FXCollections.observableArrayList(modelList));
+           }
+           
+           
+            
         }
     }
 
@@ -355,6 +365,8 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
             } else {
                 KsFX.ou(taEvents, MESSAGES.getString("msg5"), filePath);
             }
+            
+            
         }
 
         // Atvaizdis rodomas lentelėje
