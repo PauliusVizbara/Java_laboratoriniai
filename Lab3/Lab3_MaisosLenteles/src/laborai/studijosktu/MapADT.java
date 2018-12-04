@@ -1,5 +1,8 @@
 package laborai.studijosktu;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Interfeisu aprašomas Atvaizdžio ADT.
  *
@@ -29,7 +32,11 @@ public interface MapADT<K, V> {
     void clear();
     boolean containsValue(V value);
     boolean removeAt(int index);
-    
+    double averageChainLength();
+    int emptyElements(); 
+    V putIfAbsent(K key, V value);
+    Set<K> keySet();
+    void putAll(MapKTU<K,V> map);
     String[][] toArray();
 
     /**

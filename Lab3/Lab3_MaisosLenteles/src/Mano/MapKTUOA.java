@@ -1,28 +1,25 @@
-package laborai.studijosktu;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Mano;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import laborai.studijosktu.HashType;
+import laborai.studijosktu.MapADTp;
+import laborai.studijosktu.MapKTU;
 
 /**
- * Porų ("maping'ų") raktas-reikšmė objektų kolekcijos - atvaizdžio realizacija
- * maišos lentele, kolizijas sprendžiant atskirų grandinėlių (angl. separate
- * chaining) metodu. Neužmirškite, jei poros raktas - nuosavos klasės objektas,
- * pvz. klasės Automobilis objektas, klasėje būtina perdengti metodus
- * equals(Object o) ir hashCode().
  *
- * @param <K> atvaizdžio raktas
- * @param <V> atvaizdžio reikšmė
- *
- * @Užduotis Peržiūrėkite ir išsiaiškinkite pateiktus metodus.
- *
- * @author darius.matulis@ktu.lt
+ * @author Paulius
  */
-public class MapKTU<K, V> implements MapADTp<K, V> {
+public class MapKTUOA<K, V> implements MapADTp<K, V>{
 
+   
     public static final int DEFAULT_INITIAL_CAPACITY = 16;
     public static final float DEFAULT_LOAD_FACTOR = 0.75f;
     public static final HashType DEFAULT_HASH_TYPE = HashType.DIVISION;
@@ -53,23 +50,23 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
      * lentelės parametrus. Jei kuris nors parametras nėra nustatomas - 
      * priskiriama standartinė reikšmė.
      */
-    public MapKTU() {
+    public MapKTUOA() {
         this(DEFAULT_HASH_TYPE);
     }
 
-    public MapKTU(HashType ht) {
+    public MapKTUOA(HashType ht) {
         this(DEFAULT_INITIAL_CAPACITY, ht);
     }
 
-    public MapKTU(int initialCapacity, HashType ht) {
+    public MapKTUOA(int initialCapacity, HashType ht) {
         this(initialCapacity, DEFAULT_LOAD_FACTOR, ht);
     }
 
-    public MapKTU(float loadFactor, HashType ht) {
+    public MapKTUOA(float loadFactor, HashType ht) {
         this(DEFAULT_INITIAL_CAPACITY, loadFactor, ht);
     }
 
-    public MapKTU(int initialCapacity, float loadFactor, HashType ht) {
+    public MapKTUOA(int initialCapacity, float loadFactor, HashType ht) {
         if (initialCapacity <= 0) {
             throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         }
@@ -137,7 +134,7 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
         return false;
     }
 
-    public boolean removeAt(int index) {
+    public boolean removeAt(int index) {      
         if (table[index] != null) {
             table[index] = null;
             return true;
@@ -146,74 +143,67 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
         return false;
 
     }
-
-    public V putIfAbsent(K key, V value) {
+    
+    public V putIfAbsent(K key, V value)
+    {
         for (int i = 0; i < table.length; i++) {
-            if (table[i] == null) {
+            if (table[i] == null)
                 continue;
-            }
-
+        
             for (Node<K, V> n = table[i]; n != null; n = n.next) {
-                if (n.key == key) {
+                if (n.key == key)
                     return n.value;
-                }
-
+                
             }
         }
-
+        
         put(key, value);
         return null;
     }
-
-    public int emptyElements() {
-
-        return table.length - chainsCounter;
+    
+    public int emptyElements(){
+      
+        return table.length-chainsCounter;
     }
-
     public double averageChainLength() {
         double chainSize = 0;
         double foundElements = 0;
-
-        for (int i = 0; i < table.length; i++) {
-            if (table[i] != null) {
+        
+        for (int i = 0; i < table.length; i++) {         
+            if (table[i] != null) {                    
                 foundElements++;
                 Node<K, V> currentNode = table[i];
                 for (Node<K, V> n = currentNode; n != null; n = n.next) {
-                    chainSize++;
+                    chainSize++;                 
                 }
             }
         }
-
+             
         return chainSize / foundElements;
     }
-
-    public Set<K> keySet() {
-        Set<K> set = new HashSet<K>();
-
-        for (int i = 0; i < table.length; i++) {
-            if (table[i] == null) {
+    
+    
+    public Set<K> keySet(){
+        Set<K> set = new HashSet<K>(); 
+        
+         for (int i = 0; i < table.length; i++) {
+            if (table[i] == null)
                 continue;
-            }
-
+        
             for (Node<K, V> n = table[i]; n != null; n = n.next) {
-                set.add(n.key);
+                set.add(n.key);                              
             }
         }
         return set;
     }
+    
 
     public void putAll(MapKTU<K, V> newMap) {
-        for (int i = 0; i < newMap.table.length; i++) {
-            if (newMap.table[i] == null) {
-                continue;
-            }
 
-            for (Node<K, V> n = table[i]; n != null; n = n.next) {
-                put(n.key, n.value);
-            }
-        }
     }
 
+    
+    
     /**
      * Atvaizdis papildomas nauja pora.
      *
@@ -221,12 +211,14 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
      * @param value reikšmė.
      * @return Atvaizdis papildomas nauja pora.
      */
+
     @Override
     public V put(K key, V value) {
         if (key == null || value == null) {
             throw new IllegalArgumentException("Key or value is null in put(Key key, Value value)");
         }
-        index = hash(key, ht);
+        index = findPosition(key);
+        System.out.println(index);
         if (table[index] == null) {
             chainsCounter++;
         }
@@ -248,7 +240,24 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
 
         return value;
     }
+ private int findPosition(K key) {
+        int index = hash(key, ht);
+        int indexO = index;
+        int i = 0;
 
+        for (int j = 0; j < table.length; j++) {
+            if (table[index] == null ) {
+                return index;
+            }
+            i++;
+            index = (indexO + i * hash2(key)) % table.length;
+        }
+        return -1;
+    }
+
+    private int hash2(K key){
+        return 7 - (Math.abs(key.hashCode()) % 7);
+    }
     /**
      * Grąžinama atvaizdžio poros reikšmė.
      *
@@ -300,15 +309,14 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
         return null;
     }
 
-   
     /**
-     * Permaišymas  
+     * Permaišymas
      *
      * @param node
      */
     private void rehash(Node<K, V> node) {
-        MapKTU mapKTU
-                = new MapKTU(table.length * 2, loadFactor, ht);
+        MapKTUOA mapKTU
+                = new MapKTUOA(table.length * 2, loadFactor, ht);
         for (int i = 0; i < table.length; i++) {
             while (table[i] != null) {
                 if (table[i].equals(node)) {
@@ -400,6 +408,9 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
                     result.append(n.toString()).append(System.lineSeparator());
                 }
             }
+            else{
+                result.append("Node equals null").append(System.lineSeparator());
+            }
         }
         return result.toString();
     }
@@ -454,6 +465,8 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
         return chainsCounter;
     }
 
+   
+
     protected class Node<K, V> {
 
         // Raktas        
@@ -477,4 +490,5 @@ public class MapKTU<K, V> implements MapADTp<K, V> {
             return key + "=" + value;
         }
     }
+    
 }

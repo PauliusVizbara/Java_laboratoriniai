@@ -44,7 +44,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import laborai.demo.GreitaveikosTyrimas;
+import Mano.GreitaveikosTyrimas;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import laborai.studijosktu.Ks;
 import laborai.studijosktu.MapKTUx;
 
 /**
@@ -337,11 +341,24 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
              table.setItems(FXCollections.observableArrayList(modelList));
            }
            
-           
+           KsFX.ounArgs(taEvents, "Vidutinis grandinė ilgis: " + map.averageChainLength() );
+           KsFX.ounArgs(taEvents, "Tušti elementai: " + map.emptyElements());
+           OAMap();
             
         }
     }
+    
 
+   
+    public void OAMap(){
+        MapKTUOA<String, String> customMap = new MapKTUOA<>();
+        customMap.put("Metai", "1998");
+        customMap.put("Menesis", "12");
+        customMap.put("Metai", "2200");
+        
+        System.out.println(customMap.toString());
+        
+    }
     public void mapGeneration(String filePath) {
         // Išjungiami 2 ir 4 mygtukai
         IntStream.of(1, 3).forEach(p -> paneButtons.getButtons().get(p).setDisable(true));
@@ -454,6 +471,11 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
         switch (cmbCollisionTypes.getSelectionModel().getSelectedIndex()) {
             case 0:
                 map = new MapKTUx<>(new String(), new NonPlayableCharacter(), initialCapacity, loadFactor, ht);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                //map = new MapKTUOA<>(new String(), new NonPlayableCharacter(), initialCapacity, loadFactor, ht);
                 break;
             // ...
             // Programuojant kitus kolizijų sprendimo metodus reikia papildyti switch sakinį
