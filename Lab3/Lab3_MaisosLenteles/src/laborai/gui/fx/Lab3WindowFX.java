@@ -269,6 +269,7 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
         setCenter(vboxTable);
         setBottom(paneParam123Events);
         appearance();
+          OAMap();
     }
 
     /**
@@ -343,7 +344,7 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
            
            KsFX.ounArgs(taEvents, "Vidutinis grandinė ilgis: " + map.averageChainLength() );
            KsFX.ounArgs(taEvents, "Tušti elementai: " + map.emptyElements());
-           OAMap();
+         
             
         }
     }
@@ -354,9 +355,14 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
         MapKTUOA<String, String> customMap = new MapKTUOA<>();
         customMap.put("Metai", "1998");
         customMap.put("Menesis", "12");
-        customMap.put("Metai", "2200");
+        customMap.put("Metai2", "2200");
+         customMap.put("Diena", "400");
+          customMap.put("Diena2", "500");
+           customMap.put("Diena3", "2600");
         
         System.out.println(customMap.toString());
+        System.out.println(customMap.get("Metai"));
+        
         
     }
     public void mapGeneration(String filePath) {
@@ -580,7 +586,8 @@ public class Lab3WindowFX extends BorderPane implements EventHandler<ActionEvent
             stage.setOnCloseRequest((WindowEvent event) -> {
                 System.exit(0);
             });
-            //stage.setMaximized(true);         
+            //stage.setMaximized(true);     
+            
             stage.show();
         });
     }

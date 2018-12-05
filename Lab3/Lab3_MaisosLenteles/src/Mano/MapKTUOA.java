@@ -17,15 +17,15 @@ import laborai.studijosktu.MapKTU;
  *
  * @author Paulius
  */
-public class MapKTUOA<K, V> implements MapADTp<K, V>{
+public class MapKTUOA<K, V> implements MapADTp<K, V> {
 
-   
+    private final Entry EMPTY_ENTRY = new Entry();
     public static final int DEFAULT_INITIAL_CAPACITY = 16;
     public static final float DEFAULT_LOAD_FACTOR = 0.75f;
     public static final HashType DEFAULT_HASH_TYPE = HashType.DIVISION;
 
     // Maišos lentelė
-    protected Node<K, V>[] table;
+    protected Entry<K, V>[] table;
     // Lentelėje esančių raktas-reikšmė porų kiekis
     protected int size = 0;
     // Apkrovimo faktorius
@@ -75,7 +75,7 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
             throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
         }
 
-        this.table = new Node[initialCapacity];
+        this.table = new Entry[initialCapacity];
         this.loadFactor = loadFactor;
         this.ht = ht;
     }
@@ -134,7 +134,7 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
         return false;
     }
 
-    public boolean removeAt(int index) {      
+    public boolean removeAt(int index) {
         if (table[index] != null) {
             table[index] = null;
             return true;
@@ -143,67 +143,46 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
         return false;
 
     }
-    
-    public V putIfAbsent(K key, V value)
-    {
+
+    public V putIfAbsent(K key, V value) {
         for (int i = 0; i < table.length; i++) {
-            if (table[i] == null)
+            if (table[i] == null) {
                 continue;
-        
-            for (Node<K, V> n = table[i]; n != null; n = n.next) {
-                if (n.key == key)
-                    return n.value;
-                
             }
+
+            if (table[i].key == key) {
+                return table[i].value;
+            }
+
         }
-        
+
         put(key, value);
         return null;
     }
-    
-    public int emptyElements(){
-      
-        return table.length-chainsCounter;
+
+    public int emptyElements() {
+
+        return table.length - chainsCounter;
     }
-    public double averageChainLength() {
-        double chainSize = 0;
-        double foundElements = 0;
-        
-        for (int i = 0; i < table.length; i++) {         
-            if (table[i] != null) {                    
-                foundElements++;
-                Node<K, V> currentNode = table[i];
-                for (Node<K, V> n = currentNode; n != null; n = n.next) {
-                    chainSize++;                 
-                }
-            }
-        }
-             
-        return chainSize / foundElements;
-    }
-    
-    
-    public Set<K> keySet(){
-        Set<K> set = new HashSet<K>(); 
-        
-         for (int i = 0; i < table.length; i++) {
-            if (table[i] == null)
+
+    public Set<K> keySet() {
+        Set<K> set = new HashSet<K>();
+
+        for (int i = 0; i < table.length; i++) {
+            if (table[i] == null) {
                 continue;
-        
-            for (Node<K, V> n = table[i]; n != null; n = n.next) {
-                set.add(n.key);                              
             }
+
+            set.add(table[i].key);
+
         }
         return set;
     }
-    
 
     public void putAll(MapKTU<K, V> newMap) {
 
     }
 
-    
-    
     /**
      * Atvaizdis papildomas nauja pora.
      *
@@ -211,21 +190,21 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
      * @param value reikšmė.
      * @return Atvaizdis papildomas nauja pora.
      */
-
     @Override
     public V put(K key, V value) {
         if (key == null || value == null) {
             throw new IllegalArgumentException("Key or value is null in put(Key key, Value value)");
         }
-        index = findPosition(key);
-        System.out.println(index);
-        if (table[index] == null) {
-            chainsCounter++;
+        
+        index = findPosition(key,true);
+        //System.out.println(index);
+        if (index == -1) {
+            return null;
         }
 
-        Node<K, V> node = getInChain(key, table[index]);
-        if (node == null) {
-            table[index] = new Node<>(key, value, table[index]);
+        Entry<K, V> entry = table[index];
+        if (entry == null) {
+            table[index] = new Entry<>(key, value);
             size++;
 
             if (size > table.length * loadFactor) {
@@ -234,20 +213,27 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
                 lastUpdatedChain = index;
             }
         } else {
-            node.value = value;
+            entry.value = value;
             lastUpdatedChain = index;
         }
 
         return value;
     }
- private int findPosition(K key) {
+
+    private int findPosition(K key, boolean isLookingForEmpty) {
         int index = hash(key, ht);
         int indexO = index;
         int i = 0;
-
+        
         for (int j = 0; j < table.length; j++) {
-            if (table[index] == null ) {
-                return index;
+            if (isLookingForEmpty) {
+                if (table[index] == null || table[index] == EMPTY_ENTRY) {
+                    return index;
+                } else {
+                    if (table[index] != null) {
+                        return index;
+                    }
+                }
             }
             i++;
             index = (indexO + i * hash2(key)) % table.length;
@@ -255,9 +241,10 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
         return -1;
     }
 
-    private int hash2(K key){
+    private int hash2(K key) {
         return 7 - (Math.abs(key.hashCode()) % 7);
     }
+
     /**
      * Grąžinama atvaizdžio poros reikšmė.
      *
@@ -271,9 +258,9 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
             throw new IllegalArgumentException("Key is null in get(Key key)");
         }
 
-        index = hash(key, ht);
-        Node<K, V> node = getInChain(key, table[index]);
-        return (node != null) ? node.value : null;
+        index = findPosition(key,true);
+        Entry<K, V> entry = table[index];
+        return (entry != null) ? entry.value : null;
     }
 
     /**
@@ -288,42 +275,29 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
             throw new IllegalArgumentException("Key is null in remove(Key key)");
         }
 
-        index = hash(key, ht);
-        Node<K, V> previous = null;
-        for (Node<K, V> n = table[index]; n != null; n = n.next) {
-            if ((n.key).equals(key)) {
-                if (previous == null) {
-                    table[index] = n.next;
-                } else {
-                    previous.next = n.next;
-                }
-                size--;
-
-                if (table[index] == null) {
-                    chainsCounter--;
-                }
-                return n.value;
-            }
-            previous = n;
+        int index = findPosition(key,false);
+        if (index != -1) {
+            table[index] = EMPTY_ENTRY;
         }
+
         return null;
     }
 
     /**
      * Permaišymas
      *
-     * @param node
+     * @param entry
      */
-    private void rehash(Node<K, V> node) {
+    private void rehash(Entry<K, V> entry) {
         MapKTUOA mapKTU
                 = new MapKTUOA(table.length * 2, loadFactor, ht);
         for (int i = 0; i < table.length; i++) {
             while (table[i] != null) {
-                if (table[i].equals(node)) {
+                if (table[i].equals(entry)) {
                     lastUpdatedChain = i;
                 }
                 mapKTU.put(table[i].key, table[i].value);
-                table[i] = table[i].next;
+
             }
         }
         table = mapKTU.table;
@@ -364,35 +338,16 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
      * Paieška vienoje grandinėlėje
      *
      * @param key
-     * @param node
+     * @param entry
      * @return
      */
-    private Node getInChain(K key, Node node) {
-        if (key == null) {
-            throw new IllegalArgumentException("Key is null in getInChain(Key key, Node node)");
-        }
-        int chainSize = 0;
-        for (Node<K, V> n = node; n != null; n = n.next) {
-            chainSize++;
-            if ((n.key).equals(key)) {
-                return n;
-            }
-        }
-        maxChainSize = Math.max(maxChainSize, chainSize + 1);
-        return null;
-    }
-
     @Override
     public String[][] toArray() {
         String[][] result = new String[table.length][];
         int count = 0;
-        for (Node<K, V> n : table) {
+        for (Entry<K, V> n : table) {
             String[] list = new String[getMaxChainSize()];
             int countLocal = 0;
-            while (n != null) {
-                list[countLocal++] = n.toString();
-                n = n.next;
-            }
             result[count] = list;
             count++;
         }
@@ -402,14 +357,12 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (Node<K, V> node : table) {
-            if (node != null) {
-                for (Node<K, V> n = node; n != null; n = n.next) {
-                    result.append(n.toString()).append(System.lineSeparator());
-                }
-            }
-            else{
-                result.append("Node equals null").append(System.lineSeparator());
+        for (Entry<K, V> entry : table) {
+            if (entry != null) {
+                result.append(entry.toString()).append(System.lineSeparator());
+
+            } else {
+                result.append("Entry equals null").append(System.lineSeparator());
             }
         }
         return result.toString();
@@ -465,24 +418,25 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
         return chainsCounter;
     }
 
-   
+    @Override
+    public double averageChainLength() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    protected class Node<K, V> {
+    protected class Entry<K, V> {
 
         // Raktas        
         protected K key;
         // Reikšmė
         protected V value;
-        // Rodyklė į sekantį grandinėlės mazgą
-        protected Node<K, V> next;
 
-        protected Node() {
+        protected Entry() {
         }
 
-        protected Node(K key, V value, Node<K, V> next) {
+        protected Entry(K key, V value) {
             this.key = key;
             this.value = value;
-            this.next = next;
+
         }
 
         @Override
@@ -490,5 +444,5 @@ public class MapKTUOA<K, V> implements MapADTp<K, V>{
             return key + "=" + value;
         }
     }
-    
+
 }
