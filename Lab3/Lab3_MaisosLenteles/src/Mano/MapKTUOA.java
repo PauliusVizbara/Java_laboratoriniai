@@ -195,8 +195,8 @@ public class MapKTUOA<K, V> implements MapADTp<K, V> {
         if (key == null || value == null) {
             throw new IllegalArgumentException("Key or value is null in put(Key key, Value value)");
         }
-        
-        index = findPosition(key,true);
+
+        index = findPosition(key, false);
         //System.out.println(index);
         if (index == -1) {
             return null;
@@ -224,17 +224,18 @@ public class MapKTUOA<K, V> implements MapADTp<K, V> {
         int index = hash(key, ht);
         int indexO = index;
         int i = 0;
-        
+
         for (int j = 0; j < table.length; j++) {
             if (isLookingForEmpty) {
                 if (table[index] == null || table[index] == EMPTY_ENTRY) {
                     return index;
-                } else {
-                    if (table[index] != null) {
-                        return index;
-                    }
+                }
+            } else {
+                if (table[index] != null) {
+                    return index;
                 }
             }
+
             i++;
             index = (indexO + i * hash2(key)) % table.length;
         }
@@ -258,7 +259,7 @@ public class MapKTUOA<K, V> implements MapADTp<K, V> {
             throw new IllegalArgumentException("Key is null in get(Key key)");
         }
 
-        index = findPosition(key,true);
+        index = findPosition(key, true);
         Entry<K, V> entry = table[index];
         return (entry != null) ? entry.value : null;
     }
@@ -275,7 +276,7 @@ public class MapKTUOA<K, V> implements MapADTp<K, V> {
             throw new IllegalArgumentException("Key is null in remove(Key key)");
         }
 
-        int index = findPosition(key,false);
+        int index = findPosition(key, true);
         if (index != -1) {
             table[index] = EMPTY_ENTRY;
         }
